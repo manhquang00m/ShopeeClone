@@ -5,7 +5,10 @@ interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   errorMessage?: string
 }
 
-export default function Input({ register: registerResult, className, errorMessage, ...rest }: Props) {
+export default function Input({ register, className, errorMessage, ...rest }: Props) {
+  const registerResult = register(rest.name as string)
+  console.log(registerResult)
+  console.log({...registerResult})
   const handleType = () => {
     // if (rest.type === 'password') {
     //   return openEye ? 'text' : 'password'
