@@ -3,23 +3,40 @@ import { Link } from 'react-router-dom'
 import Input from 'src/components/Input/input'
 import { Schema, schemaRegister } from 'src/utils/rule'
 import { yupResolver } from '@hookform/resolvers/yup'
+import { useMutation } from '@tanstack/react-query'
+import { registerAccount } from 'src/apis/auth.api'
+import { omit } from 'lodash'
 type FormData = Pick<Schema, 'email' | 'password' | 'confirm_password'>
 const registerSchema = schemaRegister.pick(['email', 'password', 'confirm_password'])
 
 export default function Register() {
   const {
     register,
-    getValues,
     handleSubmit,
     formState: { errors }
   } = useForm<FormData>({
     resolver: yupResolver(registerSchema)
   })
+
+  const muatation = useMutation({
+    mutationFn: (payload: Omit<FormData, 'confirm_password'>) => {
+      return registerAccount(payload)
+    }
+  })
+
   const onSubmit = handleSubmit((data) => {
-    console.log(data)
+    const body = omit(data, ['confirm_password'])
+    muatation.mutateAsync(body, {
+      onSuccess: (data) => {
+        console.log(data)
+      },
+      onError: (data) => {
+        console.log(data)
+      }
+    })
   })
   return (
-    <div>
+    <div className='bg-[#ee4d2d]'>
       <div className='container'>
         <div className='grid grid-cols-1 py-12 lg:grid-cols-5 lg:py-32 lg:pr-10'>
           <div className='lg:col-span-2 lg:col-start-4'>
@@ -28,7 +45,7 @@ export default function Register() {
               <Input
                 name='email'
                 type='email'
-                className='mt-8'
+                className='mt-3'
                 register={register}
                 errorMessage={errors.email?.message}
                 placeholder='Email'
@@ -37,7 +54,6 @@ export default function Register() {
                 name='password'
                 register={register}
                 type='password'
-                className='mt-2'
                 // classNameEye='absolute right-[5px] h-5 w-5 cursor-pointer top-[12px]'
                 errorMessage={errors.password?.message}
                 placeholder='Password'
@@ -48,7 +64,6 @@ export default function Register() {
                 name='confirm_password'
                 register={register}
                 type='password'
-                className='mt-2'
                 // classNameEye='absolute right-[5px] h-5 w-5 cursor-pointer top-[12px]'
                 errorMessage={errors.confirm_password?.message}
                 placeholder='Confirm Password'

@@ -7,8 +7,6 @@ interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
 
 export default function Input({ register, className, errorMessage, ...rest }: Props) {
   const registerResult = register(rest.name as string)
-  console.log(registerResult)
-  console.log({...registerResult})
   const handleType = () => {
     // if (rest.type === 'password') {
     //   return openEye ? 'text' : 'password'
@@ -16,7 +14,7 @@ export default function Input({ register, className, errorMessage, ...rest }: Pr
     return rest.type
   }
   return (
-    <div className={'relative mt-2' + className}>
+    <div className={'relative ' + className}>
       <input
         className='w-full rounded-sm border border-gray-300 p-3 outline-none focus:border-gray-500 focus:shadow-sm'
         {...registerResult}
