@@ -6,6 +6,8 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation } from '@tanstack/react-query'
 import { registerAccount } from 'src/apis/auth.api'
 import { omit } from 'lodash'
+import { isAxiosError } from 'src/utils/utils'
+import { AxiosError } from 'axios'
 type FormData = Pick<Schema, 'email' | 'password' | 'confirm_password'>
 const registerSchema = schemaRegister.pick(['email', 'password', 'confirm_password'])
 
@@ -32,6 +34,7 @@ export default function Register() {
       },
       onError: (data) => {
         console.log(data)
+        console.log(isAxiosError(data as AxiosError))
       }
     })
   })
